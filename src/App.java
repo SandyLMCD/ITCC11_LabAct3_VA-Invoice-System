@@ -20,7 +20,7 @@ public class App {
             while (rset.next()) {
                 int clientNo = rset.getInt("Client_No");
                 String clientName = rset.getString("Client_Name");
-                System.out.println(clientNo + ", " + clientName);
+                System.out.println(clientNo + " | " + clientName);
 
                 ++rowCount;
             }
