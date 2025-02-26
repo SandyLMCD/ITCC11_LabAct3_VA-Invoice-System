@@ -13,6 +13,7 @@ public class App {
             int selectedOption = 0;
 
             Scanner sc = new Scanner(System.in);
+            clientManagement clientManagement = new clientManagement(con);
 
             while (selectedOption != 4) {
                 System.out.println("Welcome VA Sandy to your Invoice System!");
@@ -21,12 +22,13 @@ public class App {
                 System.out.println("3. Invoice Management");
                 System.out.println("4. Exit");
 
-                System.out.println("Please select an option: ");
+                System.out.print("Please select an option: ");
                 selectedOption = sc.nextInt();
 
                 switch (selectedOption) {
                     case 1:
                         // Client Management
+                        clientManagement.manageClients();
                         break;
                     case 2:
                         // Service Management
