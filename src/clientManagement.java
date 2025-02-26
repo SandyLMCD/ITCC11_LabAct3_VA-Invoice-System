@@ -3,6 +3,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Scanner;
 
+import com.mysql.cj.protocol.Resultset;
+
 public class clientManagement {
     private Connection con;
 
@@ -16,22 +18,23 @@ public class clientManagement {
         int selectedOption = 0;
 
         while (selectedOption != 5) {
-            System.out.println("===Client Management===");
+            System.out.println("\n===Client Management===");
             System.out.println("1 | Add Client");
             System.out.println("2 | View All Clients");
             System.out.println("3 | Update Client");
             System.out.println("4 | Delete Client");
             System.out.println("5 | Back to Menu");
 
-            System.out.println("Please select an option: ");
+            System.out.print("\nPlease select an option: ");
             selectedOption = sc.nextInt();
+            sc.nextLine();
 
             switch (selectedOption) {
                 case 1:
                     addClient(sc);
                     break;
                 case 2:
-                    // viewAllClients();
+                    viewAllClients(sc);
                     break;
                 case 3:
                     // updateClient();
@@ -53,11 +56,9 @@ public class clientManagement {
     }
 
     private void addClient(Scanner sc) {
-        System.out.println("Enter Client Name: ");
-        String Client_Name = sc.next();
+        System.out.print("\nEnter Client Name: ");
+        String Client_Name = sc.nextLine();
 
-        // Client client = new Client(Client_No, Client_Name);
-        // clientDAO.addClient(client);
         try {
             String query = "INSERT INTO client (Client_Name) VALUES (?)";
             PreparedStatement pstmt = con.prepareStatement(query);
@@ -68,6 +69,25 @@ public class clientManagement {
             System.out.println("Error: SQL Exception!");
             ex.printStackTrace();
         }
+    }
+
+    private void viewAllClients(Scanner sc) {
+        try {
+            String query = "SELECT * FROM client";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.executeQuery();
+            Resultset rs = (Resultset) pstmt.getResultSet();
+            System.out.println("\nClient list: ");
+            while (((java.sql.ResultSet) rs).next()) {
+                int Client_No = ((java.sql.ResultSet) rs).getInt("Client_No");
+                String Client_Name = ((java.sql.ResultSet) rs).getString("Client_Name");
+                System.out.println(Client_No + " | " + Client_Name);
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error: SQL Exception!");
+            ex.printStackTrace();
+        }
+
     }
 
 }
