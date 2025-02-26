@@ -37,7 +37,7 @@ public class clientManagement {
                     viewAllClients(sc);
                     break;
                 case 3:
-                    // updateClient();
+                    updateClient(sc);
                     break;
                 case 4:
                     // deleteClient();
@@ -88,6 +88,27 @@ public class clientManagement {
             ex.printStackTrace();
         }
 
+    }
+
+    private void updateClient(Scanner sc) {
+        System.out.print("\nEnter Client No: ");
+        int Client_No = sc.nextInt();
+        sc.nextLine();
+
+        System.out.print("Enter new Client Name: ");
+        String Client_Name = sc.nextLine();
+
+        try {
+            String query = "UPDATE client SET Client_Name = ? WHERE Client_No = ?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setString(1, Client_Name);
+            pstmt.setInt(2, Client_No);
+            pstmt.executeUpdate();
+            System.out.println("Client updated successfully!");
+        } catch (SQLException ex) {
+            System.out.println("Error: SQL Exception!");
+            ex.printStackTrace();
+        }
     }
 
 }
