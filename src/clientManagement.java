@@ -1,9 +1,9 @@
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
-
-import com.mysql.cj.protocol.Resultset;
 
 public class clientManagement {
     private Connection con;
@@ -26,33 +26,37 @@ public class clientManagement {
             System.out.println("5 | Back to Menu");
 
             System.out.print("\nPlease select an option: ");
-            selectedOption = sc.nextInt();
-            sc.nextLine();
+            try {
+                selectedOption = sc.nextInt();
+                sc.nextLine();
 
-            switch (selectedOption) {
-                case 1:
-                    addClient(sc);
-                    break;
-                case 2:
-                    viewAllClients(sc);
-                    break;
-                case 3:
-                    updateClient(sc);
-                    break;
-                case 4:
-                    deleteClient(sc);
-                    break;
-                case 5:
-                    System.out.println("Returning to main menu...");
-                    // returnToMenu(); // is it possible to make this an interface?
-                    break;
-                default:
-                    System.out.println("Invalid option. Please try again.");
-                    break;
+                switch (selectedOption) {
+                    case 1:
+                        addClient(sc);
+                        break;
+                    case 2:
+                        viewAllClients(sc);
+                        break;
+                    case 3:
+                        updateClient(sc);
+                        break;
+                    case 4:
+                        deleteClient(sc);
+                        break;
+                    case 5:
+                        System.out.println("Returning to main menu...");
+                        break;
+                    default:
+                        System.out.println("Invalid option. Please try again.");
+                        break;
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please try again.");
+                sc.next();
             }
 
         }
-        sc.close();
+        // sc.close();
     }
 
     private void addClient(Scanner sc) {
@@ -75,12 +79,12 @@ public class clientManagement {
         try {
             String query = "SELECT * FROM client";
             PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.executeQuery();
-            Resultset rs = (Resultset) pstmt.getResultSet();
+            ResultSet rs = pstmt.executeQuery();
+            // Resultset rs = (Resultset) pstmt.getResultSet();
             System.out.println("\nClient list: ");
-            while (((java.sql.ResultSet) rs).next()) {
-                int Client_No = ((java.sql.ResultSet) rs).getInt("Client_No");
-                String Client_Name = ((java.sql.ResultSet) rs).getString("Client_Name");
+            while (rs.next()) {
+                int Client_No = rs.getInt("Client_No");
+                String Client_Name = rs.getString("Client_Name");
                 System.out.println(Client_No + " | " + Client_Name);
             }
         } catch (SQLException ex) {
@@ -127,5 +131,4 @@ public class clientManagement {
             ex.printStackTrace();
         }
     }
-
 }
