@@ -17,6 +17,7 @@ public class App {
 
             Scanner sc = new Scanner(System.in);
             clientManagement clientManagement = new clientManagement(con);
+            serviceManagement serviceManagement = new serviceManagement(con);
 
             while (selectedOption != 4) {
                 System.out.println("\nWelcome VA Sandy to your Invoice System!");
@@ -32,12 +33,11 @@ public class App {
                     switch (selectedOption) {
                         case 1:
                             // Client Management
-                            Thread.sleep(1000);
                             clientManagement.manageClients();
                             break;
                         case 2:
                             // Service Management
-                            System.out.println("Service Management");
+                            serviceManagement.manageServices();
                             break;
                         case 3:
                             // Invoice Management
