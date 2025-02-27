@@ -40,7 +40,7 @@ public class clientManagement {
                     updateClient(sc);
                     break;
                 case 4:
-                    // deleteClient();
+                    deleteClient(sc);
                     break;
                 case 5:
                     System.out.println("Returning to main menu...");
@@ -105,6 +105,23 @@ public class clientManagement {
             pstmt.setInt(2, Client_No);
             pstmt.executeUpdate();
             System.out.println("Client updated successfully!");
+        } catch (SQLException ex) {
+            System.out.println("Error: SQL Exception!");
+            ex.printStackTrace();
+        }
+    }
+
+    private void deleteClient(Scanner sc) {
+        System.out.print("Enter Client No: ");
+        int Client_No = sc.nextInt();
+        sc.nextLine();
+
+        try {
+            String query = "DELETE FROM client WHERE Client_No = ?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, Client_No);
+            pstmt.executeUpdate();
+            System.out.println("Client deleted successfully!");
         } catch (SQLException ex) {
             System.out.println("Error: SQL Exception!");
             ex.printStackTrace();
