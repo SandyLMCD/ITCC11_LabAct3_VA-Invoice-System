@@ -54,4 +54,14 @@ The workspace contains several necessary documents needed to create this system.
 
 ![Console Output](/screenshots/invoiceManagement/5.jpeg)
 
+#### MySQL Tables
+
+![Console Output](/screenshots/mySQLTables/1.jpeg)
+
+![Console Output](/screenshots/mySQLTables/2.jpeg)
+
+![Console Output](/screenshots/mySQLTables/3.jpeg)
+
+![Console Output](/screenshots/mySQLTables/4.jpeg)
+
 Submitted by: Sandy Lumacad (BSIT - 2)
