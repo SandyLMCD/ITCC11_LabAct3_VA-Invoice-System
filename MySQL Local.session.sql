@@ -1,2 +1,1 @@
-SELECT *
-from client;
+SHOW CREATE TABLE service;
