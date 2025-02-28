@@ -98,7 +98,30 @@ public class serviceManagement {
     }
 
     private void updateService(Scanner sc) {
-        ///
+        /// TODO: should update the service name and per hour rate
+        System.out.print("\nEnter Service No: ");
+        int Service_No = sc.nextInt();
+        sc.nextLine();
+
+        System.out.print("Enter new Service Name: ");
+        String Service_Name = sc.nextLine();
+
+        System.out.print("Enter new per hour rate: ");
+        int Per_Hour_Rate = sc.nextInt();
+        sc.nextLine();
+
+        try {
+            String query = "UPDATE service SET Service_Name = ?, Per_Hour_Rate = ? WHERE Service_No = ?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setString(1, Service_Name);
+            pstmt.setInt(2, Per_Hour_Rate);
+            pstmt.setInt(3, Service_No);
+            pstmt.executeUpdate();
+            System.out.println("Service updated successfully!");
+        } catch (SQLException ex) {
+            System.out.println("Error: SQL Exception!");
+            ex.printStackTrace();
+        }
     }
 
     private void deleteService(Scanner sc) {

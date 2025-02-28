@@ -1,2 +1,2 @@
 SELECT *
-from invoice_line_service;
+from invoice;
