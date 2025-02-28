@@ -58,7 +58,6 @@ public class serviceManagement {
     }
 
     private void addService(Scanner sc) {
-        ///
         System.out.print("Enter service name: ");
         String Service_Name = sc.nextLine();
 
@@ -79,7 +78,6 @@ public class serviceManagement {
     }
 
     private void viewAllServices(Scanner sc) {
-        ///
         try {
             String query = "SELECT * FROM service";
             PreparedStatement pstmt = con.prepareStatement(query);
@@ -98,7 +96,7 @@ public class serviceManagement {
     }
 
     private void updateService(Scanner sc) {
-        /// TODO: should update the service name and per hour rate
+        /// should update the service name and per hour rate
         System.out.print("\nEnter Service No: ");
         int Service_No = sc.nextInt();
         sc.nextLine();
@@ -125,7 +123,20 @@ public class serviceManagement {
     }
 
     private void deleteService(Scanner sc) {
-        ///
+        System.out.print("Enter Service No: ");
+        int Service_No = sc.nextInt();
+        sc.nextLine();
+
+        try {
+            String query = "DELETE FROM service WHERE Service_No = ?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, Service_No);
+            pstmt.executeUpdate();
+            System.out.println("Service deleted successfully!");
+        } catch (SQLException ex) {
+            System.out.println("Error: SQL Exception!");
+            ex.printStackTrace();
+        }
     }
 
 }

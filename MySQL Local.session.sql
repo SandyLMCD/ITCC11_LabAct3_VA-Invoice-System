@@ -1,2 +1,1 @@
-SELECT *
-from invoice;
+SHOW CREATE TABLE service;
