@@ -1,18 +1,57 @@
-## Getting Started
+# VA Invoice System
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+## Overview
 
-## Folder Structure
+This project implemented an event-driven VA Invoice System in Java. It has the following system features:
 
-The workspace contains two folders by default, where:
+1. Client Management: Add, view, update, and delete clients.
+2. Service Management: Add, view, update, and delete services.
+3. Invoice Management: Create invoices, add services to invoices, and view client invoices.
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+## Necessary File and Folder Details
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+The workspace contains several necessary documents needed to create this system. From the creation to the database down to the screenshots of system functionalities.
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+- `normalized tables.xlsx`: the Excel file where normalization happened before the creation of the database
+- `invoice_sys_db_dump`: the SQL dump file for the database
 
-## Dependency Management
+## Prerequisites
 
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+- Java Development Kit (JDK) 8 or higher
+- Visual Studio Code
+- MySQL Server
+- MySQL Workbench
+
+## Screenshots
+
+### Console Output
+
+![Console Output](/screenshots/main.jpeg)
+
+#### Client Management
+
+![Console Output](/screenshots/clientManagement/1.jpeg)
+
+![Console Output](/screenshots/clientManagement/2.jpeg)
+
+![Console Output](/screenshots/clientManagement/3.jpeg)
+
+#### Service Management
+
+![Console Output](/screenshots/serviceManagement/1.jpeg)
+
+![Console Output](/screenshots/serviceManagement/2.jpeg)
+
+#### Invoice Management
+
+![Console Output](/screenshots/invoiceManagement/1.jpeg)
+
+![Console Output](/screenshots/invoiceManagement/2.jpeg)
+
+![Console Output](/screenshots/invoiceManagement/3.jpeg)
+
+![Console Output](/screenshots/invoiceManagement/4.jpeg)
+
+![Console Output](/screenshots/invoiceManagement/5.jpeg)
+
+Submitted by: Sandy Lumacad (BSIT - 2)
