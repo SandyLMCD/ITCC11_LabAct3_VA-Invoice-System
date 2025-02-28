@@ -72,7 +72,7 @@ public class invoiceManagement {
         int Invoice_No = rand.nextInt(9000);
 
         // user inputs the invoice date (when the invoice was created)
-        System.out.println("Enter Invoice Date (Format: YYYY/MM/DD): ");
+        System.out.print("Enter Invoice Date (Format: YYYY/MM/DD): ");
         String Invoice_Date = sc.nextLine();
 
         // print client list here
@@ -102,7 +102,7 @@ public class invoiceManagement {
         // user selects what services to include in the invoice
         // user can select multiple services
         while (true) {
-            System.out.println("Enter Service No (Enter 0 if you want to finish the invoice): ");
+            System.out.print("\nEnter Service No (Enter 0 if you want to finish the invoice): ");
             int Service_No = sc.nextInt();
             sc.nextLine();
             if (Service_No == 0) {
@@ -166,7 +166,7 @@ public class invoiceManagement {
         // invoice will be shown to the user and user would have to input 0 to go back
         // to the Invoice Management Menu
         System.out.println("\n===INVOICE DETAILS===");
-        System.out.println("Invoice No: " + Invoice_No + "(" + Invoice_Date + ")");
+        System.out.println("Invoice No: " + Invoice_No + " (" + Invoice_Date + ")");
         System.out.println("Client: " + Client_Name);
         int Total_Amount = 0;
 
@@ -201,7 +201,26 @@ public class invoiceManagement {
     }
 
     private void viewAllInvoices(Scanner sc) {
-        System.out.println("Viewing all invoices...");
+        try {
+            String query = "SELECT i.Invoice_No, i.Invoice_Date, c.Client_Name, i.Invoice_Status_Paid " +
+                    "FROM invoice i " +
+                    "JOIN client c on i.Client_No = c.Client_No";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            ResultSet rs = pstmt.executeQuery();
+            System.out.println("\nInvoice List: ");
+            while (rs.next()) {
+                int Invoice_No = rs.getInt("Invoice_No");
+                String Invoice_Date = rs.getString("Invoice_Date");
+                String Client_Name = rs.getString("Client_Name");
+                boolean Invoice_Status_Paid = rs.getBoolean("Invoice_Status_Paid");
+                String Invoice_Status = Invoice_Status_Paid ? "Paid" : "Unpaid";
+                System.out
+                        .println(Invoice_No + " | " + Invoice_Date + " | " + Client_Name + " | " + Invoice_Status);
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error: SQL Exception");
+            ex.printStackTrace();
+        }
     }
 
     private void updateInvoiceStatus(Scanner sc) {
