@@ -225,6 +225,29 @@ public class invoiceManagement {
 
     private void updateInvoiceStatus(Scanner sc) {
         System.out.println("Updating invoice status...");
+        viewAllInvoices(sc);
+
+        System.out.print("\nEnter Invoice Number: ");
+        int Invoice_Number = sc.nextInt();
+        sc.nextLine();
+
+        System.out.print("\nEnter 1 if client has paid. 0 if client still hasn't paid: ");
+        int status = sc.nextInt();
+        sc.nextLine();
+
+        boolean Invoice_Status_Paid = (status == 1);
+
+        try {
+            String query = "UPDATE invoice SET Invoice_Status_Paid = ? WHERE Invoice_No = ?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setBoolean(1, Invoice_Status_Paid);
+            pstmt.setInt(2, Invoice_Number);
+            pstmt.executeUpdate();
+            System.out.println("Invoice status updated successfully!");
+        } catch (SQLException ex) {
+            System.out.println("Error: SQL Exception");
+            ex.printStackTrace();
+        }
     }
 
     private void viewInvoiceByClient(Scanner sc) {
