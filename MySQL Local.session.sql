@@ -1,1 +1,2 @@
-SHOW CREATE TABLE service;
+SELECT *
+from invoice_line_service;

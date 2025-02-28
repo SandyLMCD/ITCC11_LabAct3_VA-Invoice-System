@@ -1,5 +1,6 @@
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -58,13 +59,17 @@ public class serviceManagement {
 
     private void addService(Scanner sc) {
         ///
-        System.out.println("Enter service name: ");
+        System.out.print("Enter service name: ");
         String Service_Name = sc.nextLine();
 
+        System.out.print("Enter per hour rate: ");
+        String Per_Hour_Rate = sc.nextLine();
+
         try {
-            String query = "INSERT INTO services (Service_Name) VALUES (?)";
+            String query = "INSERT INTO service (Service_Name, Per_Hour_Rate) VALUES (?, ?)";
             PreparedStatement pstmt = con.prepareStatement(query);
             pstmt.setString(1, Service_Name);
+            pstmt.setString(2, Per_Hour_Rate);
             pstmt.executeUpdate();
             System.out.println("Service added successfully!");
         } catch (SQLException ex) {
@@ -75,6 +80,21 @@ public class serviceManagement {
 
     private void viewAllServices(Scanner sc) {
         ///
+        try {
+            String query = "SELECT * FROM service";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            ResultSet rs = pstmt.executeQuery();
+            System.out.println("\nService List: ");
+            while (rs.next()) {
+                int Service_No = rs.getInt("Service_No");
+                String Service_Name = rs.getString("Service_Name");
+                int Per_Hour_Rate = rs.getInt("Per_Hour_Rate");
+                System.out.println(Service_No + " | " + Service_Name + " | " + "$" + Per_Hour_Rate + "/hour");
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error: SQL Exception!");
+            ex.printStackTrace();
+        }
     }
 
     private void updateService(Scanner sc) {
