@@ -1,12 +1,20 @@
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.InputMismatchException;
+import java.util.Random;
 import java.util.Scanner;
 
 public class invoiceManagement {
     private Connection con;
+    private clientManagement clientManagement;
+    private serviceManagement serviceManagement;
 
-    public invoiceManagement(Connection con) {
+    public invoiceManagement(Connection con, clientManagement clientManagement, serviceManagement serviceManagement) {
         this.con = con;
+        this.clientManagement = clientManagement;
+        this.serviceManagement = serviceManagement;
     }
 
     public void manageInvoices() {
@@ -19,7 +27,7 @@ public class invoiceManagement {
             System.out.println("1 | Create New Invoice");
             System.out.println("2 | View All Invoices");
             System.out.println("3 | Update Invoice Status");
-            System.out.println("4 | Delete Invoice");
+            System.out.println("4 | View Invoice By Client");
             System.out.println("5 | Back to Menu");
 
             System.out.print("\nPlease select an option: ");
@@ -40,7 +48,7 @@ public class invoiceManagement {
                         updateInvoiceStatus(sc);
                         break;
                     case 4:
-                        deleteInvoice(sc);
+                        viewInvoiceByClient(sc);
                         break;
                     case 5:
                         System.out.println("Returning to main menu...");
@@ -59,6 +67,137 @@ public class invoiceManagement {
 
     private void createNewInvoice(Scanner sc) {
         System.out.println("Creating new invoice...");
+
+        Random rand = new Random();
+        int Invoice_No = rand.nextInt(9000);
+
+        // user inputs the invoice date (when the invoice was created)
+        System.out.println("Enter Invoice Date (Format: YYYY/MM/DD): ");
+        String Invoice_Date = sc.nextLine();
+
+        // print client list here
+        clientManagement.viewAllClients(sc);
+
+        // user selects which among the clients to create an invoice for
+        System.out.print("\nSelect Client No: ");
+        int Client_No = sc.nextInt();
+        sc.nextLine();
+
+        try {
+            String query = "INSERT INTO invoice (Invoice_No, Invoice_Date, Client_No) VALUES (?, ?, ?)";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, Invoice_No);
+            pstmt.setString(2, Invoice_Date);
+            pstmt.setInt(3, Client_No);
+            pstmt.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println("Error: SQL Exception!");
+            ex.printStackTrace();
+            return; // Exit the method if the invoice insertion fails
+        }
+
+        // print service list here
+        serviceManagement.viewAllServices(sc);
+
+        // user selects what services to include in the invoice
+        // user can select multiple services
+        while (true) {
+            System.out.println("Enter Service No (Enter 0 if you want to finish the invoice): ");
+            int Service_No = sc.nextInt();
+            sc.nextLine();
+            if (Service_No == 0) {
+                break;
+            }
+
+            System.out.print("Enter Total Hours Rendered: ");
+            int Total_Hours_Rendered = sc.nextInt();
+            sc.nextLine();
+
+            // Retrive the per_hour_rate from services table
+            int Per_Hour_Rate = 0;
+            try {
+                String query = "SELECT Per_Hour_Rate FROM service WHERE Service_No = ?";
+                PreparedStatement ps = con.prepareStatement(query);
+                ps.setInt(1, Service_No);
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    Per_Hour_Rate = rs.getInt("Per_Hour_Rate");
+                }
+            } catch (SQLException ex) {
+                System.out.println("Error: SQL Exception");
+                ex.printStackTrace();
+            }
+
+            int Service_Subtotal = Per_Hour_Rate * Total_Hours_Rendered;
+
+            try {
+                String query = "INSERT INTO invoice_line_service(Invoice_No, Service_No, Total_Hours_Rendered, Service_Subtotal) VALUES (?, ?, ?, ?)";
+                PreparedStatement ps = con.prepareStatement(query);
+                ps.setInt(1, Invoice_No);
+                ps.setInt(2, Service_No);
+                ps.setInt(3, Total_Hours_Rendered);
+                ps.setInt(4, Service_Subtotal);
+                ps.executeUpdate();
+                System.out.println("Service added to invoice successfully!");
+            } catch (SQLException ex) {
+                System.out.println("Error: SQL Exception");
+                ex.printStackTrace();
+            }
+        }
+
+        // retrieve client name from the database
+
+        // invoice gets generated and saved in the database
+
+        String Client_Name = "";
+        try {
+            String query = "SELECT Client_Name FROM client WHERE Client_No = ?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, Client_No);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                Client_Name = rs.getString("Client_Name");
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error: SQL Exception!");
+            ex.printStackTrace();
+        }
+
+        // invoice will be shown to the user and user would have to input 0 to go back
+        // to the Invoice Management Menu
+        System.out.println("\n===INVOICE DETAILS===");
+        System.out.println("Invoice No: " + Invoice_No + "(" + Invoice_Date + ")");
+        System.out.println("Client: " + Client_Name);
+        int Total_Amount = 0;
+
+        try {
+            String query = "SELECT ils.Service_No, s.Service_Name, ils.Total_Hours_Rendered, ils.Service_Subtotal FROM invoice_line_service ils JOIN service s ON ils.Service_No = s.Service_No WHERE ils.Invoice_No = ?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, Invoice_No);
+            ResultSet rs = pstmt.executeQuery();
+            System.out.println("\nServices Included:");
+            while (rs.next()) {
+                int Service_No = rs.getInt("Service_No");
+                String Service_Name = rs.getString("Service_Name");
+                int Total_Hours_Rendered = rs.getInt("Total_Hours_Rendered");
+                int Service_Subtotal = rs.getInt("Service_Subtotal");
+                Total_Amount += Service_Subtotal;
+                System.out.println("Service No: " + Service_No + " | Service Name: " + Service_Name + " | Total Hours: "
+                        + Total_Hours_Rendered + " | Subtotal: " + Service_Subtotal);
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error: SQL Exception!");
+            ex.printStackTrace();
+        }
+
+        System.out.println("\nTotal Amount: " + Total_Amount);
+
+        System.out.println("\n0 | Back to Invoice Management Menu");
+        int backToMenu = sc.nextInt();
+        sc.nextLine();
+        if (backToMenu == 0) {
+            return;
+        }
     }
 
     private void viewAllInvoices(Scanner sc) {
@@ -69,7 +208,7 @@ public class invoiceManagement {
         System.out.println("Updating invoice status...");
     }
 
-    private void deleteInvoice(Scanner sc) {
+    private void viewInvoiceByClient(Scanner sc) {
         System.out.println("Deleting invoice...");
     }
 

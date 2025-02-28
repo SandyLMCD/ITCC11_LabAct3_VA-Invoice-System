@@ -77,7 +77,7 @@ public class serviceManagement {
         }
     }
 
-    private void viewAllServices(Scanner sc) {
+    public void viewAllServices(Scanner sc) {
         try {
             String query = "SELECT * FROM service";
             PreparedStatement pstmt = con.prepareStatement(query);

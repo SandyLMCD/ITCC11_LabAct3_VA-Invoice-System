@@ -74,7 +74,7 @@ public class clientManagement {
         }
     }
 
-    private void viewAllClients(Scanner sc) {
+    public void viewAllClients(Scanner sc) {
         try {
             String query = "SELECT * FROM client";
             PreparedStatement pstmt = con.prepareStatement(query);
@@ -91,6 +91,24 @@ public class clientManagement {
             ex.printStackTrace();
         }
 
+    }
+
+    public String getClientName() {
+        int Client_No = 0;
+        String Client_Name = "";
+        try {
+            String query = "SELECT Client_Name FROM client WHERE Client_No = ?";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, Client_No);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Client_Name = rs.getString("Client_Name");
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error: SQL Exception");
+            ex.printStackTrace();
+        }
+        return Client_Name;
     }
 
     private void updateClient(Scanner sc) {
