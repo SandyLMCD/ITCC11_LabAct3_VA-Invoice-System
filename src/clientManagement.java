@@ -56,7 +56,6 @@ public class clientManagement {
             }
 
         }
-        // sc.close();
     }
 
     private void addClient(Scanner sc) {

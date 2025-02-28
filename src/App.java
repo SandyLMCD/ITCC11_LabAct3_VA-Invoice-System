@@ -42,6 +42,7 @@ public class App {
                         case 3:
                             // Invoice Management
                             System.out.println("Invoice Management");
+                            invoiceManagement.manageInvoices();
                             break;
                         case 4:
                             // Exit
