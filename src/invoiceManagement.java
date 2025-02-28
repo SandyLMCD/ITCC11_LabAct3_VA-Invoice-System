@@ -251,7 +251,54 @@ public class invoiceManagement {
     }
 
     private void viewInvoiceByClient(Scanner sc) {
-        System.out.println("Deleting invoice...");
+        System.out.println("Viewing Invoices by Client...");
+
+        clientManagement.viewAllClients(sc);
+
+        System.out.print("\nEnter Client No: ");
+        int Client_No = sc.nextInt();
+        sc.nextLine();
+
+        String Client_Name = "";
+        try {
+            String query = "SELECT Client_Name FROM client WHERE Client_No = ?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, Client_No);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                Client_Name = rs.getString("Client_Name");
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error: SQL Exception!");
+            ex.printStackTrace();
+        }
+
+        int Total_Amount = 0;
+        try {
+            String query = "SELECT i.Invoice_No, i.Invoice_Date, i.Invoice_Status_Paid, ils.Service_Subtotal " +
+                    "FROM invoice i " +
+                    "JOIN invoice_line_service ils ON i.Invoice_No = ils.Invoice_No " +
+                    "WHERE i.Client_No = ?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, Client_No);
+            ResultSet rs = pstmt.executeQuery();
+            System.out.println("\nInvoices for Client: " + Client_Name);
+            while (rs.next()) {
+                int Invoice_No = rs.getInt("Invoice_No");
+                String Invoice_Date = rs.getString("Invoice_Date");
+                boolean Invoice_Status_Paid = rs.getBoolean("Invoice_Status_Paid");
+                String Invoice_Status = Invoice_Status_Paid ? "Paid" : "Unpaid";
+                int Service_Subtotal = rs.getInt("Service_Subtotal");
+                Total_Amount += Service_Subtotal;
+                System.out.println("Invoice No: " + Invoice_No + " | Invoice Date: " + Invoice_Date + " | Status: "
+                        + Invoice_Status + " | Subtotal: " + Service_Subtotal);
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error: SQL Exception!");
+            ex.printStackTrace();
+        }
+
+        System.out.println("\nTotal Amount for Client: " + Total_Amount);
     }
 
 }
