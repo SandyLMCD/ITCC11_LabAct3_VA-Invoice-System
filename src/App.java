@@ -18,9 +18,10 @@ public class App {
             Scanner sc = new Scanner(System.in);
             EventBus eventBus = new EventBus();
             clientManagement clientManagement = new clientManagement(con, eventBus);
-            serviceManagement serviceManagement = new serviceManagement(con, eventBus);
-            invoiceManagement invoiceManagement = new invoiceManagement(con, eventBus, clientManagement,
-                    serviceManagement);
+            serviceManagement serviceManagement = new serviceManagement(con);
+            invoiceManagement invoiceManagement = new invoiceManagement(con, clientManagement, serviceManagement);
+            // clientManagement,
+            // serviceManagement);
 
             while (selectedOption != 4) {
                 System.out.println("\nWelcome VA Sandy to your Invoice System!");
