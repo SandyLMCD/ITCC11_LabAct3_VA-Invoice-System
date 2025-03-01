@@ -22,6 +22,10 @@ public class App {
             invoiceManagement invoiceManagement = new invoiceManagement(con, eventBus, clientManagement,
                     serviceManagement);
 
+            eventBus.subscribe(clientManagement);
+            eventBus.subscribe(serviceManagement);
+            eventBus.subscribe(invoiceManagement);
+
             while (selectedOption != 4) {
                 System.out.println("\nWelcome VA Sandy to your Invoice System!");
                 System.out.println("1. Client Management");

@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class clientManagement {
+public class clientManagement implements EventBus.EventListener {
     private Connection con;
     private EventBus eventBus;
 
@@ -163,5 +163,11 @@ public class clientManagement {
             System.out.println("Error: SQL Exception!");
             ex.printStackTrace();
         }
+    }
+
+    @Override
+    public void onEvent(Event_Service event) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'onEvent'");
     }
 }

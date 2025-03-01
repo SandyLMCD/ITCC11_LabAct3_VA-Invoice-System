@@ -6,13 +6,16 @@ import java.util.InputMismatchException;
 import java.util.Random;
 import java.util.Scanner;
 
-public class invoiceManagement {
+public class invoiceManagement implements EventBus.EventListener {
     private Connection con;
+    private EventBus eventBus;
     private clientManagement clientManagement;
     private serviceManagement serviceManagement;
 
-    public invoiceManagement(Connection con, clientManagement clientManagement, serviceManagement serviceManagement) {
+    public invoiceManagement(Connection con, EventBus eventBus, clientManagement clientManagement,
+            serviceManagement serviceManagement) {
         this.con = con;
+        this.eventBus = eventBus;
         this.clientManagement = clientManagement;
         this.serviceManagement = serviceManagement;
     }
@@ -299,6 +302,12 @@ public class invoiceManagement {
         }
 
         System.out.println("\nTotal Amount for Client: " + Total_Amount);
+    }
+
+    @Override
+    public void onEvent(Event_Service event) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'onEvent'");
     }
 
 }

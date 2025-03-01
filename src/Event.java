@@ -1,4 +1,4 @@
-public class Event {
+public abstract class Event {
     private String type;
     private Object data;
 

@@ -1,4 +1,4 @@
-public class Event_Client {
+public class Event_Client extends Event {
     private String action;
     private int Client_No;
     private String Client_Name;

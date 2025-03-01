@@ -5,11 +5,15 @@ import java.sql.SQLException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class serviceManagement {
-    private Connection con;
+import javax.naming.spi.DirStateFactory.Result;
 
-    public serviceManagement(Connection con) {
+public class serviceManagement implements EventBus.EventListener {
+    private Connection con;
+    private EventBus eventBus;
+
+    public serviceManagement(Connection con, EventBus eventBus) {
         this.con = con;
+        this.eventBus = eventBus;
     }
 
     public void manageServices() {
@@ -71,10 +75,24 @@ public class serviceManagement {
             pstmt.setString(2, Per_Hour_Rate);
             pstmt.executeUpdate();
             System.out.println("Service added successfully!");
+
+            int Service_No = getServiceNoByName(Service_Name);
+            eventBus.publish(new Event_Service("add", Service_No, Service_Name));
         } catch (SQLException ex) {
             System.out.println("Error: SQL Exception!");
             ex.printStackTrace();
         }
+    }
+
+    private int getServiceNoByName(String Service_Name) throws SQLException {
+        String query = "SELECT Service_No from service where Service_Name = ?";
+        PreparedStatement pstmt = con.prepareStatement(query);
+        pstmt.setString(1, Service_Name);
+        ResultSet rs = pstmt.executeQuery();
+        if (rs.next()) {
+            return rs.getInt("Client_No");
+        }
+        return -1;
     }
 
     public void viewAllServices(Scanner sc) {
@@ -137,6 +155,12 @@ public class serviceManagement {
             System.out.println("Error: SQL Exception!");
             ex.printStackTrace();
         }
+    }
+
+    @Override
+    public void onEvent(Event_Service event) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'onEvent'");
     }
 
 }
