@@ -7,9 +7,11 @@ import java.util.Scanner;
 
 public class clientManagement {
     private Connection con;
+    private EventBus eventBus;
 
-    public clientManagement(Connection con) {
+    public clientManagement(Connection con, EventBus eventBus) {
         this.con = con;
+        this.eventBus = eventBus;
     }
 
     public void manageClients() {
@@ -68,10 +70,24 @@ public class clientManagement {
             pstmt.setString(1, Client_Name);
             pstmt.executeUpdate();
             System.out.println("Client added successfully!");
+
+            int Client_No = getClientNoByName(Client_Name);
+            eventBus.publish(new Event_Client("add", Client_No, Client_Name));
         } catch (SQLException ex) {
             System.out.println("Error: SQL Exception!");
             ex.printStackTrace();
         }
+    }
+
+    private int getClientNoByName(String Client_Name) throws SQLException {
+        String query = "SELECT Client_No from client where Client_Name = ?";
+        PreparedStatement pstmt = con.prepareStatement(query);
+        pstmt.setString(1, Client_Name);
+        ResultSet rs = pstmt.executeQuery();
+        if (rs.next()) {
+            return rs.getInt("Client_No");
+        }
+        return -1;
     }
 
     public void viewAllClients(Scanner sc) {
