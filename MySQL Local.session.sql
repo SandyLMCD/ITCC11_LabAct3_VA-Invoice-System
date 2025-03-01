@@ -1,2 +1,2 @@
 SELECT *
-FROM client;
+FROM service;

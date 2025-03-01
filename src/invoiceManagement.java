@@ -11,7 +11,8 @@ public class invoiceManagement {
     private clientManagement clientManagement;
     private serviceManagement serviceManagement;
 
-    public invoiceManagement(Connection con, clientManagement clientManagement, serviceManagement serviceManagement) {
+    public invoiceManagement(Connection con, clientManagement clientManagement,
+            serviceManagement serviceManagement) {
         this.con = con;
         this.clientManagement = clientManagement;
         this.serviceManagement = serviceManagement;

@@ -8,13 +8,13 @@ public class EventBus {
         listeners.add(listener);
     }
 
-    public void publish(Event_Client event) {
+    public void publish(Event event) {
         for (EventListener listener : listeners) {
             listener.onEvent(event);
         }
     }
 
     interface EventListener {
-        void onEvent(Event_Client event);
+        void onEvent(Event event);
     }
 }

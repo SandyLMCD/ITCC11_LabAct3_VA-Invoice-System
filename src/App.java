@@ -20,8 +20,6 @@ public class App {
             clientManagement clientManagement = new clientManagement(con, eventBus);
             serviceManagement serviceManagement = new serviceManagement(con);
             invoiceManagement invoiceManagement = new invoiceManagement(con, clientManagement, serviceManagement);
-            // clientManagement,
-            // serviceManagement);
 
             while (selectedOption != 4) {
                 System.out.println("\nWelcome VA Sandy to your Invoice System!");
